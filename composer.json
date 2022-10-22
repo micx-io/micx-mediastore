@@ -1,0 +1,49 @@
+{
+  "name": "micx/mediastore",
+  "description": "Micx MediaStore",
+  "license": "MIT",
+  "authors": [
+    { "name": "Matthias Leuffen", "email": "m@tth.es" }
+  ],
+  "repositories": [
+  ],
+  "require": {
+    "php": ">=8.0",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "brace/core": "*",
+    "brace/dbg": "*",
+    "brace/mod-session": "*",
+    "brace/mod-spaserve": "*",
+    "brace/mod-cors": "*",
+    "brace/mod-body": "*",
+    "brace/mod-router": "*",
+    "brace/mod-request-laminas": "*",
+    "brace/mod-auth-basic": "*",
+    "phore/hydrator": "*",
+    "phore/http-client": "*",
+    "lack/freda": "*",
+    "phore/vcs": "*",
+    "symfony/yaml": "6.1.x-dev"
+  },
+  "require-dev": {
+    "phore/tester": "*"
+  },
+  "suggest": {
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    },
+    "files": [
+      "config.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": { "Tests\\": "tests/" }
+  },
+  "minimum-stability": "dev",
+  "config": {
+    "preferred-install": "source"
+  }
+}

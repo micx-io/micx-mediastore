@@ -1,0 +1,9 @@
+/.idea
+/vendor
+/.phpunit.result.cache
+report
+composer.lock
+
+/workspaces
+/ssh_keys
+/ssh_keys.pub
