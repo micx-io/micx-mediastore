@@ -2,6 +2,8 @@
 namespace App;
 
 use App\Type\RepoConf;
+use App\Type\StorageFacet;
+use Brace\Command\CommandModule;
 use Brace\Core\AppLoader;
 use Brace\Core\BraceApp;
 use Brace\Dbg\BraceDbg;
@@ -13,6 +15,8 @@ use Lack\Freda\Filesystem\PosixFileSystem;
 use Lack\Freda\FredaModule;
 use Phore\Di\Container\Producer\DiService;
 use Phore\Di\Container\Producer\DiValue;
+use Phore\ObjectStore\Driver\GoogleObjectStoreDriver;
+use Phore\ObjectStore\ObjectStore;
 use Phore\VCS\VcsFactory;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -28,24 +32,29 @@ AppLoader::extend(function () {
 
     // Use the Uri-Based Routing
     $app->addModule(new RouterModule());
-
-    $app->addModule(new FredaModule(new PosixFileSystem(CONF_REPO_PATH, true)));
+    $app->addModule(new CommandModule());
 
     // The git Repository
-    $app->define("vcsFactory", new DiService(function () {
-        $repo = new VcsFactory();
-        $repo->setAuthSshPrivateKey(phore_file(CONF_SSH_KEY_FILE)->assertReadable()->get_contents());
-        $repo->setCommitUser("woodwing", "woodwing@a-f.de");
-        return $repo;
+    $app->define("publicStore", new DiService(function () {
+        $objectStore = new ObjectStore(new GoogleObjectStoreDriver(
+            CONF_GCLOUD_INDENTY_FILE,
+            CONF_GCLOUD_BUCKET ,
+            ["predefinedAcl" => "publicRead"])
+        );
+        return $objectStore;
     }));
 
-    // Where do we find the files / repo?
-    $app->define("repoConf", new DiService(function () {
-        if (STANDALONE === true) {
-            $repoConf = new RepoConf(STANDALONE_PATH);
-            return $repoConf;
-        }
-        return new RepoConf(CONF_REPO_PATH);
+    $app->define("privateStore", new DiService(function () {
+        $objectStore = new ObjectStore(new GoogleObjectStoreDriver(
+            CONF_GCLOUD_INDENTY_FILE,
+            CONF_GCLOUD_BUCKET ,
+            ["predefinedAcl" => "projectprivate"])
+        );
+        return $objectStore;
+    }));
+
+    $app->define("storageFacet", new DiService(function(ObjectStore $publicStore, ObjectStore $privateStore) {
+        return new StorageFacet($publicStore, $privateStore, "default");
     }));
 
     // Define the app so it is also available in dependency-injection

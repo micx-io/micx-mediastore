@@ -5,22 +5,18 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
-    <title>a&f Woodwing Manager</title>
+    <title>MediaStore - leuffen.de</title>
     <link rel="icon" href="_vendor/a-f.png">
 
     <link rel="stylesheet" href="_vendor/@.css">
     <script src="app.js"></script>
 </head>
 <body>
-    <ka-include src="main_navbar.inc.html"></ka-include>
-    <div style="height: 88px"></div>
 
-    <ka-router>
-        <template route_name="index" route="/static/">
-            <ka-include src="pages/index.html"></ka-include>
-        </template>
-    </ka-router>
 
-    <section style="height: 80px"></section>
+
+    <ka-router-content></ka-router-content>
+
+    <app-file-upload></app-file-upload>
 </body>
 </html>

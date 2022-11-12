@@ -24,7 +24,10 @@
     "phore/http-client": "*",
     "lack/freda": "*",
     "phore/vcs": "*",
-    "symfony/yaml": "6.1.x-dev"
+    "symfony/yaml": "6.1.x-dev",
+    "phore/objectstore": "dev-master",
+    "brace/command": "dev-main",
+    "google/cloud-storage": "dev-main"
   },
   "require-dev": {
     "phore/tester": "*"

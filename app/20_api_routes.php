@@ -9,6 +9,7 @@ use App\Ctrl\InfoCtrl;
 use App\Ctrl\ProjectCtrl;
 use App\Ctrl\PropertiesCtrl;
 use App\Ctrl\RepoCtrl;
+use App\Ctrl\UploadCtrl;
 use Brace\Auth\Basic\RequireValidAuthTokenMiddleware;
 use Brace\Core\AppLoader;
 use Brace\Core\BraceApp;
@@ -20,7 +21,7 @@ AppLoader::extend(function (BraceApp $app) {
     $mount = CONF_API_MOUNT;
 
     // Controller classes
-
+    $app->router->registerClass($mount, UploadCtrl::class);
 
 
     // Other stuff
@@ -29,11 +30,6 @@ AppLoader::extend(function (BraceApp $app) {
     // Return the Api Version
     $app->router->on("GET@$mount", function() {
         return ["system" => "a&f woodwing", "status" => "ok"];
-    });
-
-    // Return the Public SSH key for repo access
-    $app->router->on("GET@/pub-key", function (VcsFactory $vcsFactory) {
-       return ["ssh_public_key"=>$vcsFactory->createSshPublicKey()];
     });
 
     // Redirect to static Middleware (Frontend)
