@@ -5,6 +5,7 @@ namespace App;
 
 use App\Ctrl\ElementsCtrl;
 use App\Ctrl\FileCtrl;
+use App\Ctrl\GalleryCtrl;
 use App\Ctrl\InfoCtrl;
 use App\Ctrl\ProjectCtrl;
 use App\Ctrl\PropertiesCtrl;
@@ -22,6 +23,7 @@ AppLoader::extend(function (BraceApp $app) {
 
     // Controller classes
     $app->router->registerClass($mount, UploadCtrl::class);
+    $app->router->registerClass($mount, GalleryCtrl::class);
 
 
     // Other stuff

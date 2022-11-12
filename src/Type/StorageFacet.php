@@ -50,6 +50,10 @@ class StorageFacet
     }
 
 
+    public function getIndex() {
+        return $this->index;
+    }
+
     public function storeImage($name, $data) {
         if ( ! $this->isUnique($data))
             return false;
