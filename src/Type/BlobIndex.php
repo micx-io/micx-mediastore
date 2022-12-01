@@ -13,4 +13,9 @@ class BlobIndex
      * @var int
      */
     public int $lastId = 1;
+
+    /**
+     * @var string
+     */
+    public $baseUrl = "";
 }

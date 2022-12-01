@@ -1,4 +1,7 @@
 import {customElement, KaHtmlElement} from "@kasimirjs/embed";
+import {currentRoute} from "@kasimirjs/app";
+import {router} from "@kasimirjs/app";
+import {UploadModal} from "./upload-modal";
 
 @customElement("app-file-upload")
 class FileUpload extends KaHtmlElement {
@@ -7,6 +10,12 @@ class FileUpload extends KaHtmlElement {
         let scope = {
             progress: null as string
         }
+
+        window.addEventListener("paste", async (e) => {
+            let data = await (new UploadModal()).show();
+            console.log("paste", e);
+        });
+
         this.$tpl.render(scope);
         scope.$ref.upload1.addEventListener("change", async ()=> {
             let files = scope.$ref.upload1.files;
@@ -20,7 +29,7 @@ class FileUpload extends KaHtmlElement {
                 formData.append("file", file);
                 scope.progress = ((index / files.length) * 100) + "%"
                 this.$tpl.render();
-                await fetch("/v1/api/upload", {
+                await fetch(`/v1/api/${router.currentRoute.route_params['subscription_id']}/${router.currentRoute.route_params['scope_id']}/upload`, {
                     method: "POST",
                     body: formData
                 });

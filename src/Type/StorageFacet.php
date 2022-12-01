@@ -71,12 +71,12 @@ class StorageFacet
         $obj->width = $im->getImageGeometry()["width"];
         $obj->height = $im->getImageGeometry()["height"];
 
-        $obj->origUrl = "orig/{$obj->id}_{$obj->name}_{$obj->width}x{$obj->height}.{$obj->extension}";
+        $obj->origUrl = "o/{$obj->id}/{$obj->width}x{$obj->height}/{$obj->name}.{$obj->extension}";
 
         $im->scaleImage(200, 200, true);
         $im->setFormat("jpeg");
         $im->setCompressionQuality(70);
-        $obj->previewUrl = "prev/{$obj->id}_{$obj->name}_{$im->getImageGeometry()["width"]}x{$im->getImageGeometry()["height"]}.jpg";
+        $obj->previewUrl = "p/{$obj->id}/{$im->getImageGeometry()["width"]}x{$im->getImageGeometry()["height"]}/{$obj->name}.jpg";
 
         $this->publicStore->object($this->scope. "/" . $obj->origUrl)->put($data);
         $this->publicStore->object($this->scope. "/" . $obj->previewUrl)->put($im->getImageBlob());

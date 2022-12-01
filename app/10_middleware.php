@@ -3,6 +3,8 @@
 namespace App;
 
 
+use App\Config\MediaStoreConf;
+use App\Config\MediaStoreSubscriptionInfo;
 use App\Helper\FileServeMw;
 use App\Type\RepoConf;
 use Brace\Auth\Basic\AuthBasicMiddleware;
@@ -18,6 +20,8 @@ use Brace\Router\RouterDispatchMiddleware;
 use Brace\Router\RouterEvalMiddleware;
 use Brace\SpaServe\Loaders\EsbuildLoader;
 use Brace\SpaServe\SpaStaticFileServerMw;
+use Lack\Subscription\Brace\SubscriptionMiddleware;
+use Lack\Subscription\Type\T_Subscription;
 
 
 AppLoader::extend(function (BraceApp $app) {
@@ -31,7 +35,7 @@ AppLoader::extend(function (BraceApp $app) {
 
         // Lets evaluate the Uri for Routes
         new RouterEvalMiddleware(),
-
+        new SubscriptionMiddleware(),
         // This is our dynamic Frontend. Everything below /static is handled here
         new SpaStaticFileServerMw(
             __DIR__ . "/../www/spaserve",
@@ -45,11 +49,10 @@ AppLoader::extend(function (BraceApp $app) {
         // From this Line: Only API Requests
 
         // Do Authentication via Basic Auth
-        new AuthBasicMiddleware(new LambdaAuthValidator(function(BasicAuthToken $basicAuthToken, RepoConf $repoConf) {
-            if (STANDALONE === true) {
-                return true;
-            }
-            foreach ($repoConf->auth as $curAuth) {
+        new AuthBasicMiddleware(new LambdaAuthValidator(function(BasicAuthToken $basicAuthToken, T_Subscription $subscription) {
+
+            $mediaStoreConf = $subscription->getClientPrivateConfig(null, MediaStoreSubscriptionInfo::class);
+            foreach ($mediaStoreConf->auth as $curAuth) {
                 [$user, $hash] = explode(":", $curAuth);
                 if ($basicAuthToken->user === $user && password_verify($basicAuthToken->passwd, $hash))
                     return true;
@@ -57,7 +60,7 @@ AppLoader::extend(function (BraceApp $app) {
             return false;
         })),
 
-        // Dispatch the Route by the Controllers defined in 20_api_routes.php
+        // Dispatch the BraceRoute by the Controllers defined in 20_api_routes.php
         // and format object returns with JSON
         new RouterDispatchMiddleware([
             new JsonReturnFormatter($app)

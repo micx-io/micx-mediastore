@@ -3,17 +3,14 @@
 namespace App\Ctrl;
 
 use App\Type\StorageFacet;
+use Brace\Router\Attributes\BraceRoute;
 use Brace\Router\RoutableCtrl;
 use Brace\Router\Router;
 use Laminas\Diactoros\ServerRequest;
 
-class UploadCtrl implements RoutableCtrl
+class UploadCtrl
 {
 
-    public static function Routes(Router $router, string $mount, array $mw): void
-    {
-        $router->on("POST@$mount/upload", [self::class, "doUplod"]);
-    }
 
 
     protected function resize($input) : string {
@@ -25,6 +22,7 @@ class UploadCtrl implements RoutableCtrl
         return $im->getImageBlob();
     }
 
+    #[BraceRoute("POST@/{subscription_id}/{scope_id}/upload", "api.upload")]
     public function doUplod(ServerRequest $request, StorageFacet $storageFacet) {
         $ret = $request->getBody();
         foreach ($_FILES as $key => $file) {
