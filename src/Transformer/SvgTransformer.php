@@ -9,15 +9,25 @@ class SvgTransformer implements Transformer
 {
 
 
-    public function store(string $data, BlobIndexMedia $media, ObjectStore $objectStore, string $scope)
+    public function __construct(
+        public ObjectStore $objectStore,
+        public string $scope
+    ){}
+
+    public function store(string $data, BlobIndexMedia $media)
     {
         $xmlget = simplexml_load_string($data);
         $xmlattributes = $xmlget->attributes();
-        $media->width = (int) $xmlattributes->width;
-        $media->height = (int) $xmlattributes->height;
+
+        if ($xmlattributes->viewBox != "") {
+            [$dummy, $dummy, $media->width, $media->height] = explode(" ", $xmlattributes->viewBox);
+        } else {
+            $media->width = (int) $xmlattributes->width;
+            $media->height = (int) $xmlattributes->height;
+        }
 
         $origPath = Helper::buildPath($media);
-        $objectStore->object($scope . "/" . $origPath)->put($data);
+        $this->objectStore->object($this->scope . "/" . $origPath)->put($data);
 
         $media->origUrl = $origPath;
         $media->previewUrl = $origPath;

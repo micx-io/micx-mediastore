@@ -16,6 +16,9 @@ class UploadCtrl
 
     #[BraceRoute("POST@/{subscription_id}/{scope_id}/upload", "api.upload")]
     public function doUplod(ServerRequest $request, StorageFacet $storageFacet) {
+        set_time_limit(300);
+        ignore_user_abort(true);
+
         $ret = $request->getBody();
         foreach ($_FILES as $key => $file) {
             $tempName = $file["tmp_name"];

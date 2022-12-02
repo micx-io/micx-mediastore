@@ -12,9 +12,9 @@ class Helper
         return $variant . "/" . $id . "/" . $width . "x" . $height . "/" . $filename;
     }
 
-    static public function buildPath(BlobIndexMedia $media, BlobIndexMediaVariant $variant = null, string $extension=null) {
+    static public function buildPath(BlobIndexMedia $media, BlobIndexMediaVariant $variant = null) {
         if ($variant !== null) {
-            return self::buildPathDetail($variant->width, $variant->height, $media->id, $media->name . "." . $extension, "v");
+            return self::buildPathDetail($variant->width, $variant->height, $media->id, $media->name, "v");
         }
         return self::buildPathDetail($media->width, $media->height, $media->id, $media->name . "." . $media->extension, "o");
     }

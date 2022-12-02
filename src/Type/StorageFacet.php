@@ -73,16 +73,15 @@ class StorageFacet
         [$obj->name, $obj->extension] = $this->splitExtension($name);
 
         $transformers = [
-            new SvgTransformer(),
-            new ImageTransformer(),
+            new SvgTransformer($this->publicStore, $this->scope),
+            new ImageTransformer($this->publicStore, $this->scope),
         ];
 
         foreach ($transformers as $transformer) {
             assert($transformer instanceof Transformer);
             if ( ! $transformer->isSuitable($obj->extension))
                 continue;
-            out ("tranformer", $transformer);
-            $transformer->store($data, $obj, $this->publicStore, $this->scope);
+            $transformer->store($data, $obj);
         }
 
         array_unshift($this->index->media, $obj);

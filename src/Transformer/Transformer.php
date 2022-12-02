@@ -10,6 +10,6 @@ interface Transformer
 {
 
     public function isSuitable(string $extension);
-    public function store(string $data, BlobIndexMedia $media, ObjectStore $objectStore, string $scope);
+    public function store(string $data, BlobIndexMedia $media);
 
 }

@@ -55,7 +55,7 @@ class FileUpload extends KaHtmlElement {
         return Promise.resolve(undefined);
     }
 
-    // template: html
+    // language=html
     html = `
 <div>
     <input ka.ref="'upload1'" type="file" multiple>

@@ -8,12 +8,80 @@ use Phore\ObjectStore\ObjectStore;
 
 class ImageTransformer implements Transformer
 {
+
+    const SCALES = [
+        ["s.xl", 1920, 0, false],
+        ["s.lg", 1200, 0, false],
+        ["s.md", 992, 0, false],
+        ["s.sm", 768, 0, false],
+        ["s.xs", 480, 0, false],
+        ["256crop", 256, 256, true]
+    ];
+
+    const ADD_FORMATS = [
+        "avif"
+    ];
+
+
+    public function __construct(
+        public ObjectStore $objectStore,
+        public string $scope
+    ) {}
+
+
     public function isSuitable(string $extension)
     {
         return in_array($extension, ["png", "jpg", "jpeg", "gif", "webp", "avif"]);
     }
-    public function store(string $data, BlobIndexMedia $media, ObjectStore $objectStore, string $scope)
+
+
+    private function resize (string $data, int $w, int $h, bool $thumbnail, &$curW, &$curH, bool $force=false) : ?\Imagick{
+        $im = new \Imagick();
+        $im->readImageBlob($data);
+
+        if ($im->getImageGeometry()["width"] < $w && ! $force)
+            return null;
+
+        if ($thumbnail) {
+            $im->thumbnailImage($w, $h);
+        } else {
+            $im->scaleImage($w, $h, false);
+        }
+
+        $im->setCompressionQuality(70);
+
+        $curW = $im->getImageGeometry()["width"];
+        $curH = $im->getImageGeometry()["height"];
+
+        return $im;
+    }
+
+
+    private function pushVariant (string $data, array $scale, array $formats, BlobIndexMedia $media)
     {
+        $imagick = $this->resize($data, $scale[1], $scale[2], $scale[3], $curW, $curH);
+        if ($imagick === null)
+            return;
+
+        $variantIndex = new BlobIndexMediaVariant();
+        $variantIndex->height = $curH;
+        $variantIndex->width = $curW;
+        $variantIndex->extensions = $formats;
+        $variantIndex->variantId = $scale[0];
+        $variantIndex->url = Helper::buildPath($media, $variantIndex);
+        $media->variant[] = $variantIndex;
+
+        foreach($formats as $format) {
+            $imagick->setFormat($format);
+            $this->objectStore->object($this->scope . "/" . $variantIndex->url . "." . $format)->put($imagick->getImageBlob());
+        }
+
+    }
+
+
+    public function store(string $data, BlobIndexMedia $media)
+    {
+
         $im = new \Imagick();
         $im->readImageBlob($data);
 
@@ -22,24 +90,33 @@ class ImageTransformer implements Transformer
 
         $media->origUrl = Helper::buildPath($media);
 
-        $im->scaleImage(280, 280, true);
-        $im->setFormat("jpeg");
-        $im->setCompressionQuality(70);
+        $previewImagick = $this->resize($data, 280, 280, true, $pwWidth, $pwHeight, true);
 
         $preview = new BlobIndexMediaVariant();
-        $preview->height = $im->getImageGeometry()["height"];
-        $preview->width = $im->getImageGeometry()["width"];
+        $preview->height = $pwHeight;
+        $preview->width = $pwWidth;
         $preview->extensions = ["jpg"];
         $preview->variantId = "preview";
-        $preview->url = Helper::buildPath($media, $preview);
+        $preview->url = Helper::buildPath($media, $preview) . ".jpg";
         $media->variant[] = $preview;
         $media->previewUrl = $preview->url;
 
+        $variants = self::ADD_FORMATS;
+        out ("formate", $im->getImageFormat());
+        $variants[] = strtolower($im->getImageFormat());
+
+        foreach(self::SCALES as $scale) {
+            out("push scale", $scale);
+            $this->pushVariant($data, $scale, $variants, $media);
+        }
+
+
         // Main image
-        $this->publicStore->object($scope. "/" . $media->origUrl)->put($data);
+        $this->objectStore->object($this->scope. "/" . $media->origUrl)->put($data);
 
         // Preview
-        $this->publicStore->object($scope. "/" . $media->previewUrl)->put($im->getImageBlob());
+        $previewImagick->setFormat("jpeg");
+        $this->objectStore->object($this->scope. "/" . $media->previewUrl)->put($previewImagick->getImageBlob());
 
     }
 }

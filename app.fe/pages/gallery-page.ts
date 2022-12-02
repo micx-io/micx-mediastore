@@ -2,6 +2,7 @@ import {customElement, KaHtmlElement} from "@kasimirjs/embed";
 import {route, router} from "@kasimirjs/app";
 import {currentRoute} from "@kasimirjs/app";
 import {CurRoute} from "@kasimirjs/app";
+import {DetailsModal} from "../elements/details-modal";
 
 
 
@@ -19,8 +20,13 @@ class GalleryPage extends KaHtmlElement {
         let subId = currentRoute.route_params["subscription_id"];
         let scopeId = currentRoute.route_params["scope_id"];
         let scope = {
-            index: await (await fetch("/v1/api/" + subId + "/" + scopeId + "/index.json")).json()
-        }
+            index: await (await fetch("/v1/api/" + subId + "/" + scopeId + "/index.json")).json(),
+
+            $fn: {
+                details: (media) => (new DetailsModal()).show(scope.index, media)
+            }
+        };
+        (new DetailsModal()).show(scope.index, scope.index.media[0]);
         this.$tpl.render(scope);
     }
 
@@ -35,7 +41,7 @@ class GalleryPage extends KaHtmlElement {
        <div class="container-xxl">
         <div class="row">
             <div class="col-2 m-0 p-1" ka.for="let curMedia of index.media">
-                <div class="card m-0">
+                <div class="card m-0" ka.on.click="$fn.details(curMedia)">
                     <div class="card-body position-relative p-1">
                         
                         <div class="ratio ratio-1x1 text-center" style="background-size: cover;background-repeat:no-repeat; background-position: center center" ka.style.background-image="'url(' + index.baseUrl + curMedia.previewUrl + ')'">

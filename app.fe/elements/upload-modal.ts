@@ -15,7 +15,7 @@ export class UploadModal extends KaModal {
         return promise;
     }
 
-
+    // language=html
     html = `
     <modal>
         <input type="text" placeholder="Filename" ka.bind="$scope.value">
