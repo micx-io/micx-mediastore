@@ -11,6 +11,7 @@
     "php": ">=8.0",
     "ext-json": "*",
     "ext-openssl": "*",
+    "ext-simplexml": "*",
     "brace/core": "*",
     "brace/dbg": "*",
     "brace/mod-session": "*",

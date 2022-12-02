@@ -6,14 +6,23 @@ import {UploadModal} from "./upload-modal";
 @customElement("app-file-upload")
 class FileUpload extends KaHtmlElement {
 
+
+    doUpload() {
+
+    }
+
     connected(): Promise<void> {
         let scope = {
             progress: null as string
         }
 
-        window.addEventListener("paste", async (e) => {
+        document.addEventListener("paste", async (e : ClipboardEvent) => {
+            console.log(JSON.stringify(e.clipboardData.files[0]));
             let data = await (new UploadModal()).show();
+
             console.log("paste", e);
+            let formData = new FormData();
+            formData.append("file", e.clipboardData.files[0]);
         });
 
         this.$tpl.render(scope);

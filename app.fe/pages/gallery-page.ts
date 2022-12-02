@@ -36,9 +36,12 @@ class GalleryPage extends KaHtmlElement {
         <div class="row">
             <div class="col-2 m-0 p-1" ka.for="let curMedia of index.media">
                 <div class="card m-0">
-                    <div class="card-body p-1">
-                        <div class="ratio ratio-1x1 text-center" style="background-size: cover" ka.style.background-image="'url(' + index.baseUrl + curMedia.previewUrl + ')'">
+                    <div class="card-body position-relative p-1">
+                        
+                        <div class="ratio ratio-1x1 text-center" style="background-size: cover;background-repeat:no-repeat; background-position: center center" ka.style.background-image="'url(' + index.baseUrl + curMedia.previewUrl + ')'">
                         </div>
+                        <span class="position-absolute top-0 start-0 badge bg-secondary bg-opacity-50 m-1">[[curMedia.extension]]</span>
+                        <span class="position-absolute top-0 end-0 badge bg-secondary bg-opacity-50 m-1">[[ (curMedia.width + "x" + curMedia.height) ]]</span>
                     </div>
                     
                 </div>

@@ -2,6 +2,9 @@
 
 namespace App\Type;
 
+use App\Transformer\ImageTransformer;
+use App\Transformer\SvgTransformer;
+use App\Transformer\Transformer;
 use Phore\ObjectStore\ObjectStore;
 
 class StorageFacet
@@ -54,6 +57,10 @@ class StorageFacet
         return $this->index;
     }
 
+
+
+
+
     public function storeImage($name, $data) {
         if ( ! $this->isUnique($data))
             return false;
@@ -65,28 +72,22 @@ class StorageFacet
 
         [$obj->name, $obj->extension] = $this->splitExtension($name);
 
-        $im = new \Imagick();
-        $im->readImageBlob($data);
+        $transformers = [
+            new SvgTransformer(),
+            new ImageTransformer(),
+        ];
 
-        $obj->width = $im->getImageGeometry()["width"];
-        $obj->height = $im->getImageGeometry()["height"];
+        foreach ($transformers as $transformer) {
+            assert($transformer instanceof Transformer);
+            if ( ! $transformer->isSuitable($obj->extension))
+                continue;
+            out ("tranformer", $transformer);
+            $transformer->store($data, $obj, $this->publicStore, $this->scope);
+        }
 
-        $obj->origUrl = "o/{$obj->id}/{$obj->width}x{$obj->height}/{$obj->name}.{$obj->extension}";
-
-        $im->scaleImage(200, 200, true);
-        $im->setFormat("jpeg");
-        $im->setCompressionQuality(70);
-        $obj->previewUrl = "p/{$obj->id}/{$im->getImageGeometry()["width"]}x{$im->getImageGeometry()["height"]}/{$obj->name}.jpg";
-
-        $this->publicStore->object($this->scope. "/" . $obj->origUrl)->put($data);
-        $this->publicStore->object($this->scope. "/" . $obj->previewUrl)->put($im->getImageBlob());
-
-        $this->index->media[] = $obj;
+        array_unshift($this->index->media, $obj);
         $this->saveIndex();
 
     }
 
-    public function storeRaw($name, $data) {
-
-    }
 }
