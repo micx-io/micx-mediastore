@@ -43,7 +43,7 @@ class ImageTransformer implements Transformer
             return null;
 
         if ($thumbnail) {
-            $im->thumbnailImage($w, $h);
+            $im->cropThumbnailImage($w, $h);
         } else {
             $im->scaleImage($w, $h, false);
         }
@@ -90,7 +90,7 @@ class ImageTransformer implements Transformer
 
         $media->origUrl = Helper::buildPath($media);
 
-        $previewImagick = $this->resize($data, 280, 280, true, $pwWidth, $pwHeight, true);
+        $previewImagick = $this->resize($data, 280, 0, false, $pwWidth, $pwHeight, true);
 
         $preview = new BlobIndexMediaVariant();
         $preview->height = $pwHeight;
