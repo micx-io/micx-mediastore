@@ -72,12 +72,18 @@ AppLoader::extend(function () {
     $app->define("mediaStoreConf", new DiService(function (T_Subscription $subscription, RouteParams $routeParams) {
 
         $subscriptionId = $routeParams->get("subscription_id");
-        $scopeId = $routeParams->get("scope_id");
+
         $subInfo = $subscription->getClientPrivateConfig(null, MediaStoreSubscriptionInfo::class);
 
-        $access = $subInfo->getScopeAccess($scopeId);
-        if ($access === null)
-            throw new \Exception("Scope access to scope '$scopeId' denied:");
+        $scopeId = "";
+        $access = "none";
+        if ($routeParams->has("scope_id")) {
+            $scopeId = $routeParams->get("scope_id");
+            $access = $subInfo->getScopeAccess($scopeId);
+            if ($access === null)
+                throw new \Exception("Scope access to scope '$scopeId' denied:");
+        }
+
 
         return new MediaStoreConf(
             $scopeId,

@@ -97,7 +97,7 @@ class ImageTransformer implements Transformer
         $preview->width = $pwWidth;
         $preview->extensions = ["jpg"];
         $preview->variantId = "preview";
-        $preview->url = Helper::buildPath($media, $preview) . ".jpg";
+        $preview->url = Helper::buildPath($media, $preview);
         $media->variant[] = $preview;
         $media->previewUrl = $preview->url;
 

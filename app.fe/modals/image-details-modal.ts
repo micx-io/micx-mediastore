@@ -3,6 +3,7 @@ import {ImageDetailsOverviewFragment} from "./image-details-modal/fragments/over
 import {createScopeObject, KaModal, template} from "@kasimirjs/embed";
 import {KitTabPane} from "@kasimirjs/kit-bootstrap";
 import {KaCustomModal} from "@kasimirjs/embed";
+import {ImageBuilderTab} from "./image-details-modal/fragments/image-builder-tab";
 
 let html = `
 <div class="modal d-block" tabindex="-1">
@@ -15,8 +16,8 @@ let html = `
             <div class="modal-body">
                 <div class="row">
                     <div class="col-lg-3">
-                        <div class="ratio-1x1 ratio border-primary bg-karo">
-                            <a ka.attr.href="index.baseUrl + media.origUrl" target="_blank"><img class="h-auto w-100" ka.attr.src="index.baseUrl + media.previewUrl"></a>
+                        <div class="ratio-1x1 ratio border-primary bg-karo d-flex w-100">
+                            <a ka.attr.href="index.baseUrl + media.origUrl" class="w-100 h-100 d-flex" target="_blank"><img class="h-auto h-auto my-auto mx-auto" style="max-width: 100%; max-height: 100%" ka.attr.src="index.baseUrl + media.previewUrl"></a>
                         </div>
                        
                     </div>
@@ -46,7 +47,7 @@ export class ImageDetailsModal extends KaCustomModal {
             media,
             tabPane: new KitTabPane({
                 "Übersicht": new ImageDetailsOverviewFragment(),
-                "Daten": new ImageDetailsOverviewFragment()
+                "Image Builder": new ImageBuilderTab()
             }),
             $fn: {
                 close: ()=>this.resolve(null)

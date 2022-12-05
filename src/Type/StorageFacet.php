@@ -69,6 +69,7 @@ class StorageFacet
         $obj->size = strlen($data);
         $obj->id = $this->index->lastId++;
         $obj->sha = sha1($data);
+        $obj->uploadDate = date("Y-m-d H:i:s");
 
         [$obj->name, $obj->extension] = $this->splitExtension($name);
 

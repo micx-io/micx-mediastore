@@ -14,6 +14,17 @@ class MediaStoreSubscriptionInfo
      */
     public array $auth = [];
 
+    /**
+     * @return string[]
+     */
+    public function getScopeNames () : array {
+        $names = [];
+        foreach ($this->scopes as $curScope) {
+            $names[] = explode(":", $curScope)[0];
+        }
+        return $names;
+    }
+
 
     public function getScopeAccess(string $scope) : ?string {
         foreach ($this->scopes as $curScope) {

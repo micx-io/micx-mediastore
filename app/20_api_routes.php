@@ -11,6 +11,7 @@ use App\Ctrl\ProjectCtrl;
 use App\Ctrl\PropertiesCtrl;
 use App\Ctrl\RepoCtrl;
 use App\Ctrl\UploadCtrl;
+use Brace\Auth\Basic\AuthBasicMiddleware;
 use Brace\Auth\Basic\RequireValidAuthTokenMiddleware;
 use Brace\Core\AppLoader;
 use Brace\Core\BraceApp;
@@ -22,8 +23,9 @@ AppLoader::extend(function (BraceApp $app) {
     $mount = CONF_API_MOUNT;
 
     // Controller classes
-    $app->router->registerClass($mount, UploadCtrl::class);
-    $app->router->registerClass($mount, GalleryCtrl::class);
+    $app->router->registerClass($mount, UploadCtrl::class, [RequireValidAuthTokenMiddleware::class]);
+    $app->router->registerClass($mount, GalleryCtrl::class, [RequireValidAuthTokenMiddleware::class]);
+    $app->router->registerClass($mount, InfoCtrl::class, [RequireValidAuthTokenMiddleware::class]);
 
 
     // Other stuff
@@ -31,7 +33,7 @@ AppLoader::extend(function (BraceApp $app) {
 
     // Return the Api Version
     $app->router->on("GET@$mount", function() {
-        return ["system" => "a&f woodwing", "status" => "ok"];
+        return ["system" => "mediastore working", "status" => "ok"];
     });
 
     // Redirect to static Middleware (Frontend)
