@@ -11,5 +11,3 @@ define("CONF_SUBSCRIPTION_CLIENT_SECRET", "");
 define("CONF_URL_PREFIX", "https://cdn.leuffen.de/");
 
 const CONF_API_MOUNT = "/v1/api";
-
-
