@@ -99,7 +99,7 @@ class ImageTransformer implements Transformer
         $preview->variantId = "preview";
         $preview->url = Helper::buildPath($media, $preview);
         $media->variant[] = $preview;
-        $media->previewUrl = $preview->url;
+        $media->previewUrl = $preview->url . ".jpg";
 
         $variants = self::ADD_FORMATS;
         out ("formate", $im->getImageFormat());
