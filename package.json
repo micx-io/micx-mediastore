@@ -26,12 +26,13 @@
   },
   "homepage": "https://github.com/kasimirjs/kasi-editor#readme",
   "dependencies": {
-    "@kasimirjs/embed": "git+https://github.com/kasimirjs/kasi-embed.git#main",
-    "@kasimirjs/app": "git+https://github.com/kasimirjs/kasi-app.git#main",
+    "@kasimirjs/embed": ">=1.0.8",
+    "@kasimirjs/app": ">=1.0.5",
+    "@kasimirjs/kit-bootstrap": ">=1.0.4",
     "reflect-metadata": "*"
   },
   "workspaces": [
-    "workspaces/*"
+    "workspaces--/*"
   ],
   "devDependencies": {
   }
