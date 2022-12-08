@@ -15,6 +15,7 @@ class GalleryCtrl
     public function index(StorageFacet $storageFacet, MediaStoreConf $mediaStoreConf) {
         $index = $storageFacet->getIndex();
         $index->baseUrl = CONF_URL_PREFIX . "/" . $mediaStoreConf->scope . "/";
+        $index->scope = $mediaStoreConf->scope;
         return (array)$index;
     }
 }

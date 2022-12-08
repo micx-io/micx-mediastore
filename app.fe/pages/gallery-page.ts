@@ -63,7 +63,7 @@ class GalleryPage extends KaCustomElement {
             index: await (await fetch("/v1/api/" + subId + "/" + scopeId + "/index.json")).json(),
         });
         console.log("json loaded");
-        //(new ImageDetailsModal()).show(this.__scope.index, this.__scope.index.media[0]);
+        (new ImageDetailsModal()).show(this.scope.index, this.scope.index.media[0]);
         this.scope.render();
     }
 

@@ -17,5 +17,10 @@ class BlobIndex
     /**
      * @var string
      */
+    public $scope = "";
+
+    /**
+     * @var string
+     */
     public $baseUrl = "";
 }
