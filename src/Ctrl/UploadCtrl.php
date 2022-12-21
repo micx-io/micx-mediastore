@@ -23,6 +23,7 @@ class UploadCtrl
         foreach ($_FILES as $key => $file) {
             $tempName = $file["tmp_name"];
             $name = $file["name"];
+            $name = preg_replace("/[^a-zA-Z0-9_\-.]/", "_", $name);
             $error = $file["error"];
             if ($error !== 0) {
                 throw new \HttpException("Upload failed with code: $error");
