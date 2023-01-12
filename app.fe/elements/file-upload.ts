@@ -1,7 +1,8 @@
 import {customElement, KaCustomElement, KaHtmlElement, template} from "@kasimirjs/embed";
-import {currentRoute} from "@kasimirjs/app";
+import {currentRoute, messageBus} from "@kasimirjs/app";
 import {router} from "@kasimirjs/app";
 import {UploadModal} from "./upload-modal";
+import {IndexUpdatedMessage} from "../messages/index-updated-message";
 
 // language=html
 let html = `
@@ -60,6 +61,7 @@ class FileUpload extends KaCustomElement {
                     method: "POST",
                     body: formData
                 });
+                messageBus.trigger(new IndexUpdatedMessage())
 
             }
             scope.progress = null;

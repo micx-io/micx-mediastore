@@ -1,8 +1,10 @@
 import {customElement, ka_sleep, KaCustomElement, KaHtmlElement, template} from "@kasimirjs/embed";
-import {route, router} from "@kasimirjs/app";
+import {messageBus, route, router} from "@kasimirjs/app";
 import {currentRoute} from "@kasimirjs/app";
 import {CurRoute} from "@kasimirjs/app";
 import {ImageDetailsModal} from "../modals/image-details-modal";
+
+import {IndexUpdatedMessage} from "../messages/index-updated-message";
 
 // language=html
 let html = `
@@ -59,12 +61,16 @@ class GalleryPage extends KaCustomElement {
 
         let subId = currentRoute.route_params["subscription_id"];
         let scopeId = currentRoute.route_params["scope_id"];
-        this.scope.importFrom({
-            index: await (await fetch("/v1/api/" + subId + "/" + scopeId + "/index.json")).json(),
-        });
-        console.log("json loaded");
-        //(new ImageDetailsModal()).show(this.scope.index, this.scope.index.media[0]);
-        this.scope.render();
+
+        messageBus.on(IndexUpdatedMessage, async () => {
+            this.scope.importFrom({
+                index: await (await fetch("/v1/api/" + subId + "/" + scopeId + "/index.json")).json(),
+            });
+            this.scope.render();
+        })
+
+        messageBus.trigger(new IndexUpdatedMessage())
+
     }
 
 

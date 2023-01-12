@@ -36,8 +36,12 @@ class ImageTransformer implements Transformer
 
 
     private function resize (string $data, int $w, int $h, bool $thumbnail, &$curW, &$curH, bool $force=false) : ?\Imagick{
-        $im = new \Imagick();
-        $im->readImageBlob($data);
+        static $im = null;
+        if ($im === null) {
+            $im = new \Imagick();
+            $im->readImageBlob($data);
+        }
+
 
         if ($im->getImageGeometry()["width"] < $w && ! $force)
             return null;
@@ -90,17 +94,6 @@ class ImageTransformer implements Transformer
 
         $media->origUrl = Helper::buildPath($media);
 
-        $previewImagick = $this->resize($data, 280, 0, false, $pwWidth, $pwHeight, true);
-
-        $preview = new BlobIndexMediaVariant();
-        $preview->height = $pwHeight;
-        $preview->width = $pwWidth;
-        $preview->extensions = ["jpg"];
-        $preview->variantId = "preview";
-        $preview->url = Helper::buildPath($media, $preview);
-        $media->variant[] = $preview;
-        $media->previewUrl = $preview->url . ".jpg";
-
         $variants = self::ADD_FORMATS;
         out ("formate", $im->getImageFormat());
         $variants[] = strtolower($im->getImageFormat());
@@ -115,7 +108,16 @@ class ImageTransformer implements Transformer
         $this->objectStore->object($this->scope. "/" . $media->origUrl)->put($data);
 
         // Preview
+        $previewImagick = $this->resize($data, 280, 0, false, $pwWidth, $pwHeight, true);
         $previewImagick->setFormat("jpeg");
+        $preview = new BlobIndexMediaVariant();
+        $preview->height = $pwHeight;
+        $preview->width = $pwWidth;
+        $preview->extensions = ["jpg"];
+        $preview->variantId = "preview";
+        $preview->url = Helper::buildPath($media, $preview);
+        $media->variant[] = $preview;
+        $media->previewUrl = $preview->url . ".jpg";
         $this->objectStore->object($this->scope. "/" . $media->previewUrl)->put($previewImagick->getImageBlob());
 
     }
