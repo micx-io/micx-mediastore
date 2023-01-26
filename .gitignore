@@ -5,7 +5,7 @@ report
 composer.lock
 
 /node_modules
-/workspaces
+/workspaces2
 /ssh_keys
 /ssh_keys.pub
 
