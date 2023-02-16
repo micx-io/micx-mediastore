@@ -31,7 +31,7 @@ class UploadCtrl
             out("upload $name");
             $storageFacet->storeImage($name, phore_file($tempName)->get_contents());
         }
-
+        sleep(10);
         return ["success" => true, $ret, $_FILES];
 
     }
