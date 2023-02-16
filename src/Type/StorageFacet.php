@@ -40,7 +40,7 @@ class StorageFacet
     }
 
     protected function splitExtension($filename) {
-        return [pathinfo($filename, PATHINFO_FILENAME), pathinfo($filename, PATHINFO_EXTENSION)];
+        return [pathinfo($filename, PATHINFO_FILENAME), strtolower(pathinfo($filename, PATHINFO_EXTENSION))];
     }
 
     protected function isUnique($data) {
@@ -78,12 +78,17 @@ class StorageFacet
             new ImageTransformer($this->publicStore, $this->scope),
         ];
 
+        $valid = false;
         foreach ($transformers as $transformer) {
             assert($transformer instanceof Transformer);
             if ( ! $transformer->isSuitable($obj->extension))
                 continue;
             $transformer->store($data, $obj);
+            $valid = true;
         }
+
+        if ($valid === false)
+            throw new \InvalidArgumentException("No transformer for extension: " . $obj->extension);
 
         array_unshift($this->index->media, $obj);
         $this->saveIndex();
