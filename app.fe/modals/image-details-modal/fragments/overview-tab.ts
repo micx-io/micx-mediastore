@@ -1,4 +1,4 @@
-import {KaCustomFragment, template} from "@kasimirjs/embed";
+import {ka_sleep, KaCustomFragment, template} from "@kasimirjs/embed";
 import {KitFormInput} from "@kasimirjs/kit-bootstrap";
 
 // language=html
@@ -6,6 +6,14 @@ let html = `
 
 
 <div class="mb-3">
+    <h4>CDN Link kopieren:</h4> 
+    <div class="input-group mb-3">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">Größe wählen:</label>
+            <input class="form-control" readonly ka.bind="$scope.cdnLink">
+        </div>
+    </div>
+    
     
     <div class="row bg-light">
         <div class="col-md-1 d-none d-md-block">
@@ -76,6 +84,7 @@ export class ImageDetailsOverviewFragment extends KaCustomFragment {
         super();
 
         let scope = this.init({
+            cdnLink: "updating",
             selectedVariant: null,
             selectedExtension: null,
             selectedImage: null,
@@ -89,6 +98,11 @@ export class ImageDetailsOverviewFragment extends KaCustomFragment {
                 getCdnUrl: () => {
                     let variant = scope.media.variant.filter(v => v.variantId === scope.selectedVariant)[0];
                     return `${scope.index.baseUrl}/${variant.url}.(` + variant.extensions.join(",") + ")";
+                },
+                getCdnGlobUrl: (media) => {
+                    let variants = this.scope.media.variant.filter(x => x.variantId !== "preview").map((x) => x.width + "x" + x.height).join(",");
+                    let extensions = this.scope.media.variant[0].extensions.join(",");
+                    return `${this.scope.index.baseUrl}/v/${this.scope.media.id}/${variants}/${this.scope.media.name}.${extensions}`;
                 }
             },
             $on: {
@@ -102,6 +116,12 @@ export class ImageDetailsOverviewFragment extends KaCustomFragment {
                 }
             }
         })
+        //
+    }
+
+    async fragmentConnectedCallback(parentElement: HTMLElement): Promise<void> {
+        await super.fragmentConnectedCallback(parentElement);
+        this.scope.cdnLink = this.scope.$fn.getCdnGlobUrl();
     }
 
 }

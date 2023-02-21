@@ -34,6 +34,7 @@ export class ImageBuilderTab extends KaCustomFragment {
             builder: {},
             output: "Bitte einzubindene Bilder wählen",
             alt: "",
+
             $on: {
                 change: () => {
                     let code = `<picture title="${scope.alt}">\n`;
