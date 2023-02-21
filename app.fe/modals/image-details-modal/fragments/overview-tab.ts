@@ -101,7 +101,7 @@ export class ImageDetailsOverviewFragment extends KaCustomFragment {
                 },
                 getCdnGlobUrl: (media) => {
                     let variants = this.scope.media.variant.filter(x => x.variantId !== "preview").map((x) => x.width + "x" + x.height).join(",");
-                    let extensions = this.scope.media.variant[0].extensions.join(",");
+                    let extensions = this.scope.media.variant.filter(x => x.variantId !== "preview")[0].extensions.join(",");
                     return `${this.scope.index.baseUrl}/v/${this.scope.media.id}/${variants}/${this.scope.media.name}.${extensions}`;
                 }
             },
