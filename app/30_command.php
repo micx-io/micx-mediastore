@@ -13,3 +13,4 @@ AppLoader::extend(function (BraceApp $app) {
         out($obj->get());
     });
 });
+
