@@ -100,8 +100,8 @@ export class ImageDetailsOverviewFragment extends KaCustomFragment {
                     return `${scope.index.baseUrl}/${variant.url}.(` + variant.extensions.join(",") + ")";
                 },
                 getCdnGlobUrl: (media) => {
-                    let variants = this.scope.media.variant.filter(x => x.variantId !== "preview").map((x) => x.width + "x" + x.height).join(",");
-                    let extensions = this.scope.media.variant.filter(x => x.variantId !== "preview")[0].extensions.join(",");
+                    let variants = this.scope.media.variant.filter(x => x.variantId !== "preview").map((x) => x.width + "x" + x.height).join("_");
+                    let extensions = this.scope.media.variant.filter(x => x.variantId !== "preview")[0].extensions.join("_");
                     return `cdn:///${this.scope.index.scope}/v/${this.scope.media.id}/${variants}/${this.scope.media.name}.${extensions}`;
                 }
             },
