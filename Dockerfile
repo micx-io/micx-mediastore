@@ -1,4 +1,4 @@
-FROM ghcr.io/nfra-project/kickstart-flavor-php:8.1
+FROM ghcr.io/nfra-project/kickstart-flavor-php:unstable
 ENV DEV_CONTAINER_NAME="micx-mediastore"
 
 
