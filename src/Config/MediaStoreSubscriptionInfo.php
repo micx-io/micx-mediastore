@@ -28,7 +28,7 @@ class MediaStoreSubscriptionInfo
 
     public function getScopeAccess(string $scope) : ?string {
         foreach ($this->scopes as $curScope) {
-            if (strpos(":", $curScope) === -1)
+            if (strpos($curScope, ":") === -1)
                 continue;
             [$curScopeName, $access] = explode(":", $curScope);
             if ($curScopeName === $scope)
