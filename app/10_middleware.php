@@ -5,7 +5,6 @@ namespace App;
 
 use App\Config\MediaStoreConf;
 use App\Config\MediaStoreSubscriptionInfo;
-use App\Helper\FileServeMw;
 use App\Type\RepoConf;
 use Brace\Auth\Basic\AuthBasicMiddleware;
 use Brace\Auth\Basic\BasicAuthToken;
