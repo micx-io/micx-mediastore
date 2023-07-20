@@ -3,8 +3,6 @@
 namespace App\Transformer;
 
 use App\Type\BlobIndexMedia;
-use App\Type\StorageFacet;
-use Phore\ObjectStore\ObjectStore;
 
 interface Transformer
 {

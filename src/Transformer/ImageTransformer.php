@@ -54,6 +54,7 @@ class ImageTransformer implements Transformer
 
         $im->setCompressionQuality(70);
 
+
         $curW = $im->getImageGeometry()["width"];
         $curH = $im->getImageGeometry()["height"];
 

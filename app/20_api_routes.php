@@ -2,20 +2,12 @@
 namespace App;
 
 
-
-use App\Ctrl\ElementsCtrl;
-use App\Ctrl\FileCtrl;
 use App\Ctrl\GalleryCtrl;
 use App\Ctrl\InfoCtrl;
-use App\Ctrl\ProjectCtrl;
-use App\Ctrl\PropertiesCtrl;
-use App\Ctrl\RepoCtrl;
 use App\Ctrl\UploadCtrl;
-use Brace\Auth\Basic\AuthBasicMiddleware;
 use Brace\Auth\Basic\RequireValidAuthTokenMiddleware;
 use Brace\Core\AppLoader;
 use Brace\Core\BraceApp;
-use Phore\VCS\VcsFactory;
 
 
 AppLoader::extend(function (BraceApp $app) {

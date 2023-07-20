@@ -29,11 +29,13 @@
     "@kasimirjs/embed": "1.0.14",
     "@kasimirjs/app": "1.0.7",
     "@kasimirjs/kit-bootstrap": "1.0.4",
-    "reflect-metadata": "*"
+    "reflect-metadata": "*",
+    "bootstrap": "^5.3"
   },
-  "workspaces--": [
+  "workspaces": [
     "workspaces/*"
   ],
   "devDependencies": {
+    "esbuild": "^0.18"
   }
 }

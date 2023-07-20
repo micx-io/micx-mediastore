@@ -3,6 +3,7 @@ import {route} from "@kasimirjs/app";
 import "./elements/file-upload"
 import "./pages/gallery-page"
 import "./pages/index-page"
+import "bootstrap"
 
 @customElement("page-start")
 @route("start", "/static")

@@ -6,9 +6,9 @@ import {IndexUpdatedMessage} from "../messages/index-updated-message";
 
 // language=html
 let html = `
-<div ka.debug="progress">
+<div>
     <input ka.ref="'upload1'" type="file" multiple>
-    <div class="progress" ka.if="progress !== null">
+    <div class="progress" ka.if="typeof(progress) !== 'undefined'">
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" ka.style.width="progress"></div>
     </div>
 </div>`

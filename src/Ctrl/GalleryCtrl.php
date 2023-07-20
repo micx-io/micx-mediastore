@@ -2,11 +2,9 @@
 
 namespace App\Ctrl;
 
+use App\Business\StorageFacet;
 use App\Config\MediaStoreConf;
-use App\Type\StorageFacet;
 use Brace\Router\Attributes\BraceRoute;
-use Brace\Router\RoutableCtrl;
-use Brace\Router\Router;
 
 class GalleryCtrl
 {

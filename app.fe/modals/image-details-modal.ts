@@ -23,7 +23,7 @@ let html = `
                     </div>
                     
                     <div class="col-lg-9">
-                        <ka-use ka.use="tabPane"></ka-use>
+                        <div ka.use="tabPane"></div>
                     </div>
                 </div>
             </div>

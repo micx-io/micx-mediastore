@@ -1,10 +1,10 @@
 <?php
 namespace App;
 
+use App\Business\processors\ImageStoreageProcessor;
+use App\Business\StorageFacet;
 use App\Config\MediaStoreConf;
 use App\Config\MediaStoreSubscriptionInfo;
-use App\Type\RepoConf;
-use App\Type\StorageFacet;
 use Brace\Command\CommandModule;
 use Brace\Core\AppLoader;
 use Brace\Core\BraceApp;
@@ -12,17 +12,12 @@ use Brace\Dbg\BraceDbg;
 use Brace\Mod\Request\Zend\BraceRequestLaminasModule;
 use Brace\Router\RouterModule;
 use Brace\Router\Type\RouteParams;
-
-use Lack\Freda\Filesystem\PosixFileSystem;
-use Lack\Freda\FredaModule;
 use Lack\Subscription\Brace\SubscriptionClientModule;
 use Lack\Subscription\Type\T_Subscription;
 use Phore\Di\Container\Producer\DiService;
 use Phore\Di\Container\Producer\DiValue;
 use Phore\ObjectStore\Driver\GoogleObjectStoreDriver;
 use Phore\ObjectStore\ObjectStore;
-use Phore\VCS\VcsFactory;
-use Psr\Http\Message\ServerRequestInterface;
 
 
 BraceDbg::SetupEnvironment(true, ["192.168.178.20", "localhost", "localhost:5000", "mediastore.leuffen.de"]);
@@ -66,7 +61,9 @@ AppLoader::extend(function () {
     }));
 
     $app->define("storageFacet", new DiService(function(ObjectStore $publicStore, ObjectStore $privateStore, MediaStoreConf $mediaStoreConf) {
-        return new StorageFacet($publicStore, $privateStore, $mediaStoreConf->scope);
+        $facet =  new StorageFacet($publicStore, $privateStore, $mediaStoreConf->scope);
+        $facet->addProcessor(new ImageStoreageProcessor());
+        return $facet;
     }));
 
     $app->define("mediaStoreConf", new DiService(function (T_Subscription $subscription, RouteParams $routeParams) {

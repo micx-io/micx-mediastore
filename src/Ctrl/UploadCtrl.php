@@ -2,10 +2,8 @@
 
 namespace App\Ctrl;
 
-use App\Type\StorageFacet;
+use App\Business\StorageFacet;
 use Brace\Router\Attributes\BraceRoute;
-use Brace\Router\RoutableCtrl;
-use Brace\Router\Router;
 use Laminas\Diactoros\ServerRequest;
 
 class UploadCtrl
@@ -29,9 +27,8 @@ class UploadCtrl
                 throw new \HttpException("Upload failed with code: $error");
             }
             out("upload $name");
-            $storageFacet->storeImage($name, phore_file($tempName)->get_contents());
+            $storageFacet->store($name, $tempName);
         }
-        sleep(10);
         return ["success" => true, $ret, $_FILES];
 
     }

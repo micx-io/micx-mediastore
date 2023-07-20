@@ -29,6 +29,12 @@ class BlobIndexMedia
      */
     public $tags = [];
 
+
+    /**
+     * @var string
+     */
+    public $type = "image";
+
     /**
      * @var int
      */
