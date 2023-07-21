@@ -9,10 +9,10 @@ import {IndexUpdatedMessage} from "../messages/index-updated-message";
 // language=html
 let html = `
         
-<div class="container-xxl">
+<div class="container-fluid">
     <div class="row" ka.if="index !== null">
-        <div class="col-2 m-0 p-1" ka.for="let curMedia of index.media">
-            <div class="card m-0" ka.classlist.border-primary="$scope.selected.includes(curMedia.id)" ka.classlist.shadow-sm="$scope.selected.includes(curMedia.id)">
+        <div class="col-2 m-0 p-1" ka.for="let curMedia of index.media" style="min-width: 200px;max-width: 212px;">
+            <div class="card m-0" ka.classlist.border-primary="$scope.selected.includes(curMedia.id)" ka.classlist.shadow="$scope.selected.includes(curMedia.id)">
                 <div class="card-body position-relative p-1" ka.on.click="$fn.select(curMedia, $event)">
                     
                     <div class="bg-karo rounded">
@@ -45,7 +45,7 @@ let html = `
     </div>
     
 </div>
-<nav class="navbar position-fixed bottom-0 w-100 bg-light border-top">
+<nav class="navbar position-fixed bottom-0 w-100 bg-light border-top shadow-lg">
     <div class="container">
         <div ka.if="selected.length === 0">
             <app-file-upload></app-file-upload>
@@ -55,15 +55,15 @@ let html = `
             <div class="col-6">
                 <label for="basic-url" class="form-label">Image URL (flex)</label>
                 <div class="input-group mb-3 w-100">
-                    <input ka.ref="'flexUrl'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getImageFlexUrl()" ka.on.click="$ref.flexUrl.select() && document.execCommand('copy')" id="basic-url" aria-describedby="basic-addon3">
-                    <button class="input-group-text" id="basic-addon3" ka.on.click="$ref.flexUrl.select() && document.execCommand('copy')">Copy</button>
+                    <input ka.ref="'flexUrl'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getImageFlexUrl()" ka.on.click="$fn.copyClipboard($ref.flexUrl)" id="basic-url" aria-describedby="basic-addon3">
+                    <button class="input-group-text" id="basic-addon3" ka.on.click="$fn.copyClipboard($ref.flexUrl)">Copy</button>
                 </div>
             </div>
             <div class="col-6">
                 <label for="basic-url" class="form-label">Image Embed (Markdown)</label>
                 <div class="input-group mb-3 w-100">
-                    <input ka.ref="'embedMd'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getEmbedMd()" ka.on.click="$ref.embedMd.select() && document.execCommand('copy')" id="basic-url" aria-describedby="basic-addon3">
-                    <button class="input-group-text" id="basic-addon3" ka.on.click="$ref.embedMd.select() && document.execCommand('copy')">Copy</button>
+                    <input ka.ref="'embedMd'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getEmbedMd()" ka.on.click="$fn.copyClipboard($ref.embedMd)" id="basic-url" aria-describedby="basic-addon3">
+                    <button class="input-group-text" id="basic-addon3" ka.on.click="$fn.copyClipboard($ref.embedMd)">Copy</button>
                 </div>
             </div>
      
@@ -111,6 +111,11 @@ class GalleryPage extends KaCustomElement {
                     let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
                     let url = scope.$fn.getImageFlexUrl();
                     return `![${media.userDescription}](${url})`;
+                },
+                copyClipboard(element : HTMLInputElement) {
+                    element.select();
+                    navigator.clipboard.writeText(element.value);
+                    //document.execCommand('copy');
                 }
             }
         })

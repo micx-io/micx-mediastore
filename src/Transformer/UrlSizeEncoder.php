@@ -75,7 +75,7 @@ class UrlSizeEncoder
         $aspect = str_replace("/", "-", $this->ratio);
 
         $aspect = preg_replace_callback("/^([0-9\-]+)$/", fn(array $w) => self::RATIO_SHORTCUTS[$w[1]] ?? $w[1], $aspect);
-        $widths = preg_replace_callback("/^([0-9]+)-?$/", fn(array $w) => self::WIDTH_SHORTCUTS[$w[1]] ?? $w[1], $widths);
+        $widths = preg_replace_callback("/([0-9]+)-?/", fn(array $w) => self::WIDTH_SHORTCUTS[$w[1]] ?? $w[1], $widths);
 
         return "v2/" . $this->id . "/" . $aspect . "_" . $widths . "/" . $this->filename . "." . $extensions;
     }
