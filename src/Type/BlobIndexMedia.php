@@ -56,9 +56,19 @@ class BlobIndexMedia
     public $height;
 
     /**
+     * @var string|null
+     */
+    public $info1 = "";
+
+    /**
      * @var BlobIndexMediaVariant[]
      */
     public $variant = [];
+
+    /**
+     * @var string|null
+     */
+    public string|null $userDescription = "";
 
     /**
      * @var string

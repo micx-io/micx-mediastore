@@ -39,6 +39,7 @@ AppLoader::extend(function (BraceApp $app) {
         new SpaStaticFileServerMw(
             __DIR__ . "/../www/spaserve",
             liveReload: DEV_MODE,
+            observeDirs: [__DIR__ . "/../app.fe"],
             loaders: [
                 new EsbuildLoader("/app.js", "app.fe/index.ts", "text/javascript", "/opt", minify: false, showWarnings: true),
             ]

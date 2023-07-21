@@ -12,6 +12,11 @@ class ImageShellTransformer
     private $dimensions = null;
     private $lastInputFile = null;
 
+    public function getImageMimeType() : string {
+        $ret = phore_exec("identify -format '%m' ':file'", ["file" => $this->inputFile]);
+        return $ret;
+    }
+
     public function getImageDimensions() : array {
         if ($this->dimensions !== null)
             return $this->dimensions;

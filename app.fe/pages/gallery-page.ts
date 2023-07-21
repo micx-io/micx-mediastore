@@ -12,8 +12,8 @@ let html = `
 <div class="container-xxl">
     <div class="row" ka.if="index !== null">
         <div class="col-2 m-0 p-1" ka.for="let curMedia of index.media">
-            <div class="card m-0"">
-                <div class="card-body position-relative p-1">
+            <div class="card m-0" ka.classlist.border-primary="$scope.selected.includes(curMedia.id)" ka.classlist.shadow-sm="$scope.selected.includes(curMedia.id)">
+                <div class="card-body position-relative p-1" ka.on.click="$fn.select(curMedia, $event)">
                     
                     <div class="bg-karo rounded">
                         <div class="ratio ratio-1x1 text-center " style="background-size: cover;background-repeat:no-repeat; background-position: center center">
@@ -22,7 +22,7 @@ let html = `
                     </div>
                     
                     <span class="position-absolute top-0 start-0 badge bg-primary bg-opacity-50 m-1">[[curMedia.type]]</span>
-                    <span class="position-absolute top-0 end-0 badge bg-secondary bg-opacity-50 m-1">[[ (curMedia.width + "x" + curMedia.height) ]]</span>
+                    <span class="position-absolute top-0 end-0 badge bg-secondary bg-opacity-50 m-1">[[ curMedia.info1 ]]</span>
                     
                     <div class="position-absolute badge bottom-0 end-0 badge bg-secondary bg-opacity-50 m-1">
                         <div class="dropdown">
@@ -47,7 +47,27 @@ let html = `
 </div>
 <nav class="navbar position-fixed bottom-0 w-100 bg-light border-top">
     <div class="container">
-        <app-file-upload></app-file-upload>
+        <div ka.if="selected.length === 0">
+            <app-file-upload></app-file-upload>
+        </div>
+        <div ka.if="selected.length > 0" class="row w-100">
+            
+            <div class="col-6">
+                <label for="basic-url" class="form-label">Image URL (flex)</label>
+                <div class="input-group mb-3 w-100">
+                    <input ka.ref="'flexUrl'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getImageFlexUrl()" ka.on.click="$ref.flexUrl.select() && document.execCommand('copy')" id="basic-url" aria-describedby="basic-addon3">
+                    <button class="input-group-text" id="basic-addon3" ka.on.click="$ref.flexUrl.select() && document.execCommand('copy')">Copy</button>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="basic-url" class="form-label">Image Embed (Markdown)</label>
+                <div class="input-group mb-3 w-100">
+                    <input ka.ref="'embedMd'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getEmbedMd()" ka.on.click="$ref.embedMd.select() && document.execCommand('copy')" id="basic-url" aria-describedby="basic-addon3">
+                    <button class="input-group-text" id="basic-addon3" ka.on.click="$ref.embedMd.select() && document.execCommand('copy')">Copy</button>
+                </div>
+            </div>
+     
+        </div>
     </div>
 
 
@@ -65,8 +85,33 @@ class GalleryPage extends KaCustomElement {
         super();
         let scope = this.init({
             index: null,
+            selected: [],
             $fn: {
-                details: (media) => (new ImageDetailsModal()).show(scope.index, media)
+                details: (media) => (new ImageDetailsModal()).show(scope.index, media),
+                select: (media, $event : PointerEvent) => {
+                    if ($event.shiftKey || $event.ctrlKey) {
+                        if (scope.selected.includes(media.id)) {
+                            scope.selected = scope.selected.filter(id => id != media.id);
+                        } else {
+                            scope.selected = [...scope.selected, media.id];
+                        }
+                    } else {
+                        if (scope.selected.includes(media.id)) {
+                            scope.selected = [];
+                        } else {
+                            scope.selected = [media.id];
+                        }
+                    }
+                },
+                getImageFlexUrl() {
+                    let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
+                    return scope.index.baseUrl + media.previewUrl;
+                },
+                getEmbedMd() {
+                    let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
+                    let url = scope.$fn.getImageFlexUrl();
+                    return `![${media.userDescription}](${url})`;
+                }
             }
         })
     }

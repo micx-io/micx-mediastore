@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-use App\Business\processors\ImageStoreageProcessor;
+use App\Business\processors\ImageStorageProcessor;
 use App\Business\StorageFacet;
 use App\Config\MediaStoreConf;
 use App\Config\MediaStoreSubscriptionInfo;
@@ -62,7 +62,7 @@ AppLoader::extend(function () {
 
     $app->define("storageFacet", new DiService(function(ObjectStore $publicStore, ObjectStore $privateStore, MediaStoreConf $mediaStoreConf) {
         $facet =  new StorageFacet($publicStore, $privateStore, $mediaStoreConf->scope);
-        $facet->addProcessor(new ImageStoreageProcessor());
+        $facet->addProcessor(new ImageStorageProcessor());
         return $facet;
     }));
 
