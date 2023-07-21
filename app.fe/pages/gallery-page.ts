@@ -9,7 +9,7 @@ import {IndexUpdatedMessage} from "../messages/index-updated-message";
 // language=html
 let html = `
         
-<div class="container-fluid" style="margin-bottom: 200px;">
+<div class="container-fluid" style="margin-bottom: 200px;user-select: none">
     <div class="row" ka.if="index !== null" >
         <div class="col-2 m-0 p-1" ka.for="let curMedia of index.media" style="min-width: 200px;max-width: 212px;">
             <div class="card m-0" ka.classlist.border-primary="$scope.selected.includes(curMedia.id)" ka.classlist.shadow="$scope.selected.includes(curMedia.id)">
@@ -45,7 +45,7 @@ let html = `
     </div>
     
 </div>
-<nav class="navbar position-fixed bottom-0 w-100 bg-light border-top shadow-lg">
+<nav class="navbar position-fixed bottom-0 w-100 bg-light border-top shadow-lg" style="user-select:none;">
     <div class="container-fluid">
         <div ka.if="selected.length === 0">
             <app-file-upload></app-file-upload>
