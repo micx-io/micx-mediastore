@@ -2,6 +2,7 @@
 
 namespace Test;
 
+use App\Transformer\Helper;
 use App\Transformer\UrlSizeEncoder;
 
 class UrlSizeEncoderTest extends \PHPUnit\Framework\TestCase
@@ -13,6 +14,11 @@ class UrlSizeEncoderTest extends \PHPUnit\Framework\TestCase
         $im->setAspectRatio(1200, 800);
         $im->setWidths([1200, 800, 400, 200]);
         echo $im->toString();
+    }
+
+
+    public function testAspectRatio() {
+        echo Helper::getAspectRatio(6017, 4016) . "\n";
     }
 
 }

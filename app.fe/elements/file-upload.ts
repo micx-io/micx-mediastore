@@ -48,19 +48,26 @@ class FileUpload extends KaCustomElement {
         scope.$ref.upload1.addEventListener("change", async () => {
             let files = scope.$ref.upload1.files;
             console.log(files);
-            scope.progress = "0%";
+            scope.progress = "5%";
 
             for (let index = 0; index < files.length; index++) {
                 let file = files[index];
                 let formData = new FormData();
                 console.log(file);
                 formData.append("file", file);
-                scope.progress = ((index / files.length) * 100) + "%"
+                scope.progress = Math.min((index / files.length) * 100 + 4, 100) + "%"
 
-                await fetch(`/v1/api/${router.currentRoute.route_params['subscription_id']}/${router.currentRoute.route_params['scope_id']}/upload`, {
+
+                let response = await fetch(`/v1/api/${router.currentRoute.route_params['subscription_id']}/${router.currentRoute.route_params['scope_id']}/upload`, {
                     method: "POST",
                     body: formData
                 });
+                let json = await response.json();
+                if ( ! response.ok) {
+                    alert("Upload failed: " + json.error?.message ?? "Undefined error");
+                    console.error(json);
+                }
+
                 messageBus.trigger(new IndexUpdatedMessage())
 
             }
