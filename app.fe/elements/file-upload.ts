@@ -8,7 +8,7 @@ import {IndexUpdatedMessage} from "../messages/index-updated-message";
 let html = `
 <div>
     <input ka.ref="'upload1'" type="file" multiple>
-    <div class="progress" ka.if="typeof(progress) !== 'undefined'">
+    <div class="progress" ka.if="progress !== null">
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" ka.style.width="progress"></div>
     </div>
 </div>`
@@ -55,8 +55,8 @@ class FileUpload extends KaCustomElement {
                 let formData = new FormData();
                 console.log(file);
                 formData.append("file", file);
-                scope.progress = Math.min((index / files.length) * 100 + 4, 100) + "%"
 
+                scope.progress = Math.floor(Math.min(((index / files.length) * 100 + 4), 100)) + "%"
 
                 let response = await fetch(`/v1/api/${router.currentRoute.route_params['subscription_id']}/${router.currentRoute.route_params['scope_id']}/upload`, {
                     method: "POST",
@@ -67,6 +67,7 @@ class FileUpload extends KaCustomElement {
                     alert("Upload failed: " + json.error?.message ?? "Undefined error");
                     console.error(json);
                 }
+
 
                 messageBus.trigger(new IndexUpdatedMessage())
 
