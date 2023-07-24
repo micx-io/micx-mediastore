@@ -10,8 +10,8 @@ config_file:
 
 command:
   build:
-#    - "composer update"
-#    - "npm install"
+   - "composer update"
+   - "npm install"
 
 
   run:
