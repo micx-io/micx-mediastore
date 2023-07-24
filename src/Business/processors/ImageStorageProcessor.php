@@ -62,7 +62,7 @@ class ImageStorageProcessor implements StorageProcessorInterface
         // The original Image
         $namingEncoder = new UrlSizeEncoder($obj->id, $obj->name);
         $namingEncoder->setAspectRatio($dimensions["width"], $dimensions["height"]);
-        $namingEncoder->setWidths([$dimensions["width"]]);
+
         $namingEncoder->setExtensions([$fileExtension]);
 
         $previewName = clone $namingEncoder;
@@ -99,6 +99,7 @@ class ImageStorageProcessor implements StorageProcessorInterface
 
         $obj->info1 = Helper::getAspectRatio($dimensions["width"], $dimensions["height"]);
 
+        $namingEncoder->setWidths([$dimensions["width"]]);
         $obj->origUrl = $namingEncoder->toString();
         $obj->previewUrl = $previewName->toString();
         $previewFile = $transformer->convert("webp", self::WIDTH_PREVIEW, self::QUALITY_PREVIEW);
