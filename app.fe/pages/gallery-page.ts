@@ -15,9 +15,12 @@ let html = `
             <div class="card m-0" ka.classlist.border-primary="$scope.selected.includes(curMedia.id)" ka.classlist.shadow="$scope.selected.includes(curMedia.id)">
                 <div class="card-body position-relative p-1" ka.on.click="$fn.select(curMedia, $event)">
                     
-                    <div class="bg-karo rounded">
-                        <div class="ratio ratio-1x1 text-center " style="background-size: cover;background-repeat:no-repeat; background-position: center center">
-                            <img ka.attr.src="index.baseUrl + curMedia.previewUrl">
+                    <div ka.classlist.bg-karo="curMedia.type !== 'download'" class=" rounded">
+                        <div ka.if="curMedia.type !== 'download'" class="ratio ratio-1x1 text-center " style="background-size: cover;background-repeat:no-repeat; background-position: center center">
+                            <img loading="lazy" ka.attr.src="index.baseUrl + curMedia.previewUrl">
+                        </div>
+                        <div ka.if="curMedia.type === 'download'" class="ratio ratio-1x1 text-center ">
+                           <div class="mt-4">[[ curMedia.name + "." + curMedia.extension ]]</div> 
                         </div>
                     </div>
                     
@@ -52,18 +55,11 @@ let html = `
         </div>
         <div ka.if="selected.length > 0" class="row w-100">
             
-            <div class="col-6">
-                <label for="basic-url" class="form-label">Image URL (flex)</label>
+            <div ka.for="value of $fn.getCopyValues()" class="col">
+                <label for="basic-url" class="form-label">[[ value.text ]]</label>
                 <div class="input-group mb-3 w-100">
-                    <input ka.ref="'flexUrl'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getImageFlexUrl()" ka.on.click="$fn.copyClipboard($ref.flexUrl)" id="basic-url" aria-describedby="basic-addon3">
-                    <button class="btn btn-primary" id="basic-addon3" ka.on.click="$fn.copyClipboard($ref.flexUrl)">Copy</button>
-                </div>
-            </div>
-            <div class="col-6">
-                <label for="basic-url" class="form-label">Image Embed (Markdown)</label>
-                <div class="input-group mb-3 w-100">
-                    <input ka.ref="'embedMd'" type="text" class="form-control bg-white" readonly ka.attr.value="$fn.getEmbedMd()" ka.on.click="$fn.copyClipboard($ref.embedMd)" id="basic-url" aria-describedby="basic-addon3">
-                    <button class="btn btn-primary" id="basic-addon3" ka.on.click="$fn.copyClipboard($ref.embedMd)">Copy</button>
+                    <input ka.ref="value.id" type="text" class="form-control bg-white" readonly ka.attr.value="value.val" ka.on.click="$fn.copyClipboard($ref.flexUrl)" id="basic-url" aria-describedby="basic-addon3">
+                    <button class="btn btn-primary" id="basic-addon3" ka.on.click="$fn.copyClipboard($ref[value.id])">Copy</button>
                 </div>
             </div>
      
@@ -116,6 +112,20 @@ class GalleryPage extends KaCustomElement {
                     element.select();
                     navigator.clipboard.writeText(element.value);
                     //document.execCommand('copy');
+                },
+                getCopyValues() {
+                    let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
+                    let values = [];
+                    if (media.type === "image" || media.type === "svg") {
+                        values.push({id: "flexUrl", text: "Flex Url", val: scope.$fn.getImageFlexUrl()});
+                        values.push({id: "embedMd", text: "Embed Markdown", val: scope.$fn.getEmbedMd()});
+                    } else if (media.type === "pdf") {
+                        values.push({id: "flexUrl", text: "PDF Download Url", val: scope.index.baseUrl + media.origUrl});
+                        values.push({id: "PreviewUrl", text: "PDF Preview Url", val: scope.index.baseUrl + media.previewUrl});
+                    } else {
+                        values.push({id: "downloadUrl", text: "Download Url", val: scope.index.baseUrl + media.origUrl});
+                    }
+                    return values;
                 }
             }
         })

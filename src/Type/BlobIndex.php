@@ -4,6 +4,14 @@ namespace App\Type;
 
 class BlobIndex
 {
+
+    /**
+     * The revision of the index
+     *
+     * @var string|null
+     */
+    public string $rev = "1.1";
+
     /**
      * @var BlobIndexMedia[]
      */

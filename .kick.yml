@@ -2,7 +2,7 @@ version: 1
 from: "ghcr.io/nfra-project/kickstart-flavor-php:unstable"
 ports: "80:80"
 
-packages: [php8.1-curl, php8.1-http, php8.1-raphf, inotify-tools, php-imagick, php-simplexml, imagemagick]
+packages: [php8.1-curl, php8.1-http, php8.1-raphf, inotify-tools, php-imagick, php-simplexml, imagemagick, ghostscript, poppler-utils]
 
 config_file:
   template: "config.php.dist"

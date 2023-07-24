@@ -1,7 +1,10 @@
 <?php
 namespace App;
 
+use App\Business\processors\DownloadStorageProcessor;
 use App\Business\processors\ImageStorageProcessor;
+use App\Business\processors\PdfStorageProcessor;
+use App\Business\processors\SvgStorageProcessor;
 use App\Business\StorageFacet;
 use App\Config\MediaStoreConf;
 use App\Config\MediaStoreSubscriptionInfo;
@@ -63,6 +66,9 @@ AppLoader::extend(function () {
     $app->define("storageFacet", new DiService(function(ObjectStore $publicStore, ObjectStore $privateStore, MediaStoreConf $mediaStoreConf) {
         $facet =  new StorageFacet($publicStore, $privateStore, $mediaStoreConf->scope);
         $facet->addProcessor(new ImageStorageProcessor());
+        $facet->addProcessor(new SvgStorageProcessor());
+        $facet->addProcessor(new PdfStorageProcessor());
+        $facet->addProcessor(new DownloadStorageProcessor());
         return $facet;
     }));
 

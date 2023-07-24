@@ -4,6 +4,9 @@ namespace App\Type;
 
 class BlobIndexMedia
 {
+
+
+
     /**
      * @var int
      */
