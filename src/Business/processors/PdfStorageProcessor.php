@@ -66,7 +66,7 @@ class PdfStorageProcessor implements StorageProcessorInterface
         // The original Image
         $namingEncoder = new UrlSizeEncoder($obj->id, $obj->name);
         $namingEncoder->setAspectRatio($dimensions["width"], $dimensions["height"]);
-        $namingEncoder->setWidths([$dimensions["width"]]);
+
         $namingEncoder->setExtensions([$fileExtension]);
 
         $previewName = clone $namingEncoder;
@@ -102,7 +102,7 @@ class PdfStorageProcessor implements StorageProcessorInterface
         }
 
         $obj->info1 = number_format(filesize($dataFile) / 1024, 2) . " KB";
-
+        $namingEncoder->setWidths([$dimensions["width"]]);
         // Download Url of the pdf
         $obj->origUrl = "d/". ($obj->id) . "/" . $filename . "." . $fileExtension;
 
