@@ -12,6 +12,7 @@ command:
   build:
     - "ls -la"
     - "cat /etc/passwd"
+    - "whoami"
     - "composer update"
     - "npm install"
 
