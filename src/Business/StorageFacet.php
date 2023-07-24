@@ -28,7 +28,7 @@ class StorageFacet
         public ObjectStore $privateStore,
         public string      $scope) {
 
-        $this->indexObj = $this->privateStore->object($this->scope . "/.index.media.json");
+        $this->indexObj = $this->privateStore->object($this->scope . "/.index.media-v2.json");
         if ( ! $this->indexObj->exists()) {
             $this->index = new BlobIndex();
         } else {

@@ -48,15 +48,6 @@ class BlobIndexMedia
      */
     public $uploadDate;
 
-    /**
-     * @var int|null
-     */
-    public $width;
-
-    /**
-     * @var int|null
-     */
-    public $height;
 
     /**
      * @var string|null
