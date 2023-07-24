@@ -10,11 +10,8 @@ config_file:
 
 command:
   build:
-    - "ls -la"
-    - "cat /etc/passwd"
-    - "whoami"
     - "composer update"
-    - "npm install"
+    - "npm update"
 
 
   run:
