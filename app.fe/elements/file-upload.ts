@@ -8,6 +8,7 @@ import {IndexUpdatedMessage} from "../messages/index-updated-message";
 let html = `
 <div>
     <input ka.ref="'upload1'" type="file" multiple>
+    <input type="checkbox" ka.bind="$scope.lossless"> Lossless
     <div class="progress" ka.if="progress !== null">
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" ka.style.width="progress"></div>
     </div>
@@ -22,7 +23,8 @@ class FileUpload extends KaCustomElement {
         super();
 
         let scope = this.init({
-            progress: null
+            progress: null,
+            lossless: false
         });
 
     }
@@ -58,7 +60,9 @@ class FileUpload extends KaCustomElement {
 
                 scope.progress = Math.floor(Math.min(((index / files.length) * 100 + 4), 100)) + "%"
 
-                let response = await fetch(`/v1/api/${router.currentRoute.route_params['subscription_id']}/${router.currentRoute.route_params['scope_id']}/upload`, {
+                let qulityQ = scope.lossless ? "?quality=100" : "";
+
+                let response = await fetch(`/v1/api/${router.currentRoute.route_params['subscription_id']}/${router.currentRoute.route_params['scope_id']}/upload` + qulityQ, {
                     method: "POST",
                     body: formData
                 });

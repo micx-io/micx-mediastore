@@ -64,4 +64,9 @@ class SvgStorageProcessor implements StorageProcessorInterface
 
         array_unshift($index->media, $obj);
     }
+
+    public function setInstructions(array $instructions): void
+    {
+        // TODO: Implement setInstructions() method.
+    }
 }

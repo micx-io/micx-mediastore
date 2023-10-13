@@ -13,14 +13,17 @@ class ImageShellTransformer
     private $lastInputFile = null;
 
     public function getImageMimeType() : string {
-        $ret = phore_exec("identify -format '%m' ':file'", ["file" => $this->inputFile]);
+        $ret = phore_exec("identify -format '%m' ':file' 2>/dev/null", ["file" => $this->inputFile]);
         return $ret;
     }
 
     public function getImageDimensions() : array {
         if ($this->dimensions !== null)
             return $this->dimensions;
-        $ret = phore_exec("identify -format '%w %h' ':file'", ["file" => $this->inputFile]);
+        $ret = phore_exec("identify -format '%w %h' ':file' 2>/dev/null", ["file" => $this->inputFile], true);
+
+        $ret = $ret[count($ret)-1]; // Ingore warnings tirggered by webp
+
         $exp = explode(" ", $ret);
         $this->dimensions = [
             "width" => (int)$exp[0],

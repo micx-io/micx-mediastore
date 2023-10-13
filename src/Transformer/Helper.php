@@ -17,6 +17,8 @@ class Helper
      * @return string
      */
     static public function getAspectRatio(int $width, int $height) : string {
+        if ($width == 0 || $height == 0)
+            throw new \InvalidArgumentException("Invalid Width or Height. ($width x $height)");
         $gcdFn = function ($a, $b) use (&$gcdFn) {
             if ($b == 0) {
                 return $a;

@@ -17,6 +17,12 @@ class UploadCtrl
         set_time_limit(300);
         ignore_user_abort(true);
 
+        $quality = $request->getQueryParams()["quality"] ?? 85;
+
+        $storageFacet->setStorageProcessorInstructions([
+            "quality" => $quality
+        ]);
+
         $ret = $request->getBody();
         foreach ($_FILES as $key => $file) {
             $tempName = $file["tmp_name"];

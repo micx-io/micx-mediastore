@@ -57,6 +57,12 @@ class StorageFacet
     }
 
 
+    public function setStorageProcessorInstructions(array $instructions) : void {
+        foreach ($this->processors as $processor) {
+            $processor->setInstructions($instructions);
+        }
+    }
+
     /**
      * Store the file in the storage
      *

@@ -15,10 +15,6 @@
     "build": "npm run make.mjs && npm run make.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kasimirjs/kasi-app.git"
-  },
   "author": "Matthias Leuffen",
   "license": "MIT",
   "bugs": {

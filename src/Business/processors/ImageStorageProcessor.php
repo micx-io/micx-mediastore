@@ -41,6 +41,10 @@ class ImageStorageProcessor implements StorageProcessorInterface
         "webp" => "image/webp",
     ];
 
+    private $instructions = [
+        "quality" => self::QUALITY,
+    ];
+
 
     public function process(string $filename, string $fileExtension, string $dataFile, BlobIndex $index, ObjectStore $objectStore, string $scope)
     {
@@ -87,7 +91,7 @@ class ImageStorageProcessor implements StorageProcessorInterface
                 $variant->height = (int)($dimensions["height"] / $dimensions["width"] * $width);
                 $variant->url = $curNamingEncoder->toString();
 
-                $tmpName = $transformer->convert($format, $width, self::QUALITY);
+                $tmpName = $transformer->convert($format, $width, $this->instructions["quality"]);
                 $objectStore->object($scope . "/" . $curNamingEncoder->toString())
                     ->withMeta(["Content-Type"=> self::FORMATS[$format]])->put(phore_file($tmpName)->get_contents());
 
@@ -110,5 +114,12 @@ class ImageStorageProcessor implements StorageProcessorInterface
             ->withMeta(["Content-Type"=> $transformer->getImageMimeType()])->put(phore_file($dataFile)->get_contents());
 
         array_unshift($index->media, $obj);
+    }
+
+    public function setInstructions(array $instructions): void
+    {
+        foreach ($instructions as $key => $value) {
+            $this->instructions[$key] = $value;
+        }
     }
 }
