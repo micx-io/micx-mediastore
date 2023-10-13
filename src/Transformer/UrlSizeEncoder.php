@@ -48,8 +48,8 @@ class UrlSizeEncoder
     // Return 0.5 if the aspect ratio is 1:2
     // Return 1.0 if the aspect ratio is 1:1
     // Return 16 : 9 if the aspect ratio is 16:9 etc.
-    public function setAspectRatio(int $width, int $height) {
-        $this->ratio = Helper::getAspectRatio($width, $height);
+    public function setAspectRatio(float $width, float $height) {
+        $this->ratio = Helper::getAspectRatio((int)$width, (int)$height);
 
     }
 
