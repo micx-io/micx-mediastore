@@ -27,7 +27,7 @@ class UploadCtrl
         foreach ($_FILES as $key => $file) {
             $tempName = $file["tmp_name"];
             $name = $file["name"];
-            $ext = pathinfo($name, PATHINFO_EXTENSION);
+            $ext = strtolower(trim(pathinfo($name, PATHINFO_EXTENSION)));
             $name = pathinfo($name, PATHINFO_FILENAME);
             // Replace Umlaute by their ascii representation (ignore case)
 
