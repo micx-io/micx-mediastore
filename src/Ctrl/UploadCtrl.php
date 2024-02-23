@@ -31,7 +31,7 @@ class UploadCtrl
             $name = pathinfo($name, PATHINFO_FILENAME);
             // Replace Umlaute by their ascii representation (ignore case)
 
-            $name = str_replace(["ä", "ö", "ü", "ß", " "], ["ae", "oe", "ue", "ss", ""], $name);
+            $name = str_replace(["ä", "ö", "ü", "ß", " "], ["ae", "oe", "ue", "ss", "-"], $name);
             $name = str_replace(["Ä", "Ö", "Ü"], ["Ae", "Oe", "Ue"], $name);
             // Remove all non-ascii characters
             $name = preg_replace("/[^a-zA-Z0-9_\-]/", "", $name);
