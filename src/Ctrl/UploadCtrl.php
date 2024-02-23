@@ -27,7 +27,12 @@ class UploadCtrl
         foreach ($_FILES as $key => $file) {
             $tempName = $file["tmp_name"];
             $name = $file["name"];
-            $name = preg_replace("/[^a-zA-Z0-9_\-.]/", "_", $name);
+            $ext = pathinfo($name, PATHINFO_EXTENSION);
+            $name = pathinfo($name, PATHINFO_FILENAME);
+            // Replace Umlaute by their ascii representation
+            $name = str_replace(["ä", "ö", "ü", "ß", " "], ["ae", "oe", "ue", "ss", ""], $name);
+            $name = preg_replace("/[^a-zA-Z0-9_\-]/", "_", $name);
+            $name = $name . "." . $ext;
             $error = $file["error"];
             if ($error !== 0) {
                 throw new \HttpException("Upload failed with code: $error");
