@@ -44,6 +44,5 @@ class UploadCtrl
             $storageFacet->store($name, $tempName);
         }
         return ["success" => true, $ret, $_FILES];
-
     }
 }
