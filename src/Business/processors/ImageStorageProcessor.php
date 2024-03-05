@@ -72,7 +72,11 @@ class ImageStorageProcessor implements StorageProcessorInterface
         $previewName = clone $namingEncoder;
         $previewName->setExtensions(array_keys(self::FORMATS));
         $variantIndex = 0;
-        foreach (self::WIDTHS as $width) {
+        $widths = self::WIDTHS;
+        if ($dimensions["width"] < 260) {
+            $widths = [260];
+        }
+        foreach ($widths as $width) {
             if ($dimensions["width"] < $width) {
                 continue;
             }
