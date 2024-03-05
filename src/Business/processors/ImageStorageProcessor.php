@@ -74,7 +74,7 @@ class ImageStorageProcessor implements StorageProcessorInterface
         $variantIndex = 0;
         $widths = self::WIDTHS;
         if ($dimensions["width"] < 260) {
-            $widths = [260];
+            $widths = [$dimensions["width"]];
         }
         foreach ($widths as $width) {
             if ($dimensions["width"] < $width) {
