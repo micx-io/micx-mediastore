@@ -58,7 +58,7 @@ let html = `
             <div ka.for="value of $fn.getCopyValues()" class="col">
                 <label for="basic-url" class="form-label">[[ value.text ]]</label>
                 <div class="input-group mb-3 w-100">
-                    <input ka.ref="value.id" type="text" class="form-control bg-white" readonly ka.attr.value="value.val" ka.on.click="$fn.copyClipboard($ref.flexUrl)" id="basic-url" aria-describedby="basic-addon3">
+                    <textarea ka.ref="value.id" type="text" class="form-control bg-white" readonly ka.textContent="value.val" ka.on.click="$fn.copyClipboard($ref.flexUrl)" id="basic-url" aria-describedby="basic-addon3"></textarea>
                     <button class="btn btn-primary" id="basic-addon3" ka.on.click="$fn.copyClipboard($ref[value.id])">Copy</button>
                 </div>
             </div>
@@ -103,8 +103,10 @@ class GalleryPage extends KaCustomElement {
                     let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
                     return scope.index.baseUrl + media.previewUrl;
                 },
-                getEmbedMd() {
-                    let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
+                getEmbedMd(id : string = null) {
+                    if (id === null) id = scope.selected[0];
+
+                    let media = scope.index.media.filter(media => media.id === id)[0];
                     let url = scope.$fn.getImageFlexUrl();
                     return `![${media.userDescription}](${url})`;
                 },
@@ -114,16 +116,34 @@ class GalleryPage extends KaCustomElement {
                     //document.execCommand('copy');
                 },
                 getCopyValues() {
-                    let media = scope.index.media.filter(media => media.id === scope.selected[0])[0];
+                    let mediaArr = scope.index.media.filter(media => scope.selected.includes(media.id));
+                    let vv = {
+                        flexUrl : {id: "flexUrl", text: "Flex Url", val: []},
+                        embedMd : {id: "embedMd", text: "Embed Markdown", val: []},
+                        downloadUrl : {id: "downloadUrl", text: "Download Url", val: []},
+                        PreviewUrl : {id: "PreviewUrl", text: "PDF Preview Url", val: []}
+
+                    }
+                    for(let media of mediaArr) {
+
+                        if (media.type === "image" || media.type === "svg") {
+                            vv.flexUrl.val.push(scope.index.baseUrl + media.previewUrl);
+                            vv.embedMd.val.push(`![${media.userDescription}](${scope.index.baseUrl}${media.previewUrl})`);
+                        } else if (media.type === "pdf") {
+                            vv.PreviewUrl.val.push( scope.index.baseUrl + media.previewUrl);
+                            vv.flexUrl.val.push(scope.index.baseUrl + media.origUrl);
+
+                        } else {
+                            vv.downloadUrl.val.push(scope.index.baseUrl + media.origUrl);
+                        }
+
+                    }
                     let values = [];
-                    if (media.type === "image" || media.type === "svg") {
-                        values.push({id: "flexUrl", text: "Flex Url", val: scope.$fn.getImageFlexUrl()});
-                        values.push({id: "embedMd", text: "Embed Markdown", val: scope.$fn.getEmbedMd()});
-                    } else if (media.type === "pdf") {
-                        values.push({id: "flexUrl", text: "PDF Download Url", val: scope.index.baseUrl + media.origUrl});
-                        values.push({id: "PreviewUrl", text: "PDF Preview Url", val: scope.index.baseUrl + media.previewUrl});
-                    } else {
-                        values.push({id: "downloadUrl", text: "Download Url", val: scope.index.baseUrl + media.origUrl});
+                    for (let key in vv) {
+                        if (vv[key].val.length > 0) {
+                            vv[key].val = vv[key].val.join("\n");
+                            values.push(vv[key]);
+                        }
                     }
                     return values;
                 }
