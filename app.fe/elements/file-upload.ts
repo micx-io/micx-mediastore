@@ -68,7 +68,7 @@ class FileUpload extends KaCustomElement {
                 });
                 let json = await response.json();
                 if ( ! response.ok) {
-                    alert("Upload failed: " + json.error?.message ?? "Undefined error");
+                    alert("Upload failed: " + ((json.error?.message) ?? "Undefined error"));
                     console.error(json);
                 }
 
