@@ -2,7 +2,7 @@ version: 1
 from: "ghcr.io/nfra-project/kickstart-flavor-php:8.3"
 ports: "80:80"
 
-packages: [php8.3-curl, php8.3-http, php8.3-raphf, inotify-tools, php-imagick, php-simplexml, imagemagick, ghostscript, poppler-utils]
+packages: [php-imagick, php-simplexml, imagemagick, ghostscript, poppler-utils]
 
 config_file:
   template: "config.php.dist"
