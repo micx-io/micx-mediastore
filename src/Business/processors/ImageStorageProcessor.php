@@ -32,7 +32,7 @@ class ImageStorageProcessor implements StorageProcessorInterface
     ];
 
 
-    const QUALITY = 85;
+    const QUALITY = 90;
 
     const QUALITY_PREVIEW = 20;
     const WIDTH_PREVIEW = 180;
