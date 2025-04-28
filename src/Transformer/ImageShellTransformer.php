@@ -43,17 +43,33 @@ class ImageShellTransformer
         $inputName = basename($this->lastInputFile);
 
         $outName = $inputDir . "/" .  $inputName . "-" . $width . "."  . $format;
-        phore_exec("convert ':input' -auto-orient -quality {quality} -resize '{width}x' ':output'", [
+        $outName100q = $inputDir . "/" .  $inputName . "-" . $width . "-100q."  . $format;
+
+        // To prevent qualtity losses in lower resolutions first resize to 100% quality
+        phore_exec("gm convert ':input' -auto-orient -quality {quality} -resize '{width}x' ':output'", [
             "input" => $this->lastInputFile,
             "width" => $width,
+            "quality" => 100,
+            "output" => $outName100q
+        ]);
+
+        $this->filenames[] = $outName100q;
+        $this->lastInputFile = $outName100q;
+
+        // Then reduce quality
+        phore_exec("gm convert -strip ':input' -define {method} -define {filter} -define {alpha-filter} -define {alpha-compression} -quality {quality} ':output'", [
+            "input" => $outName100q,
             "quality" => $quality,
+            "method" => "webp:method=6",
+            "filter" => "webp:auto-filter=true",
+            "alpha-compression" => "webp:alpha-compression=1",
+            "alpha-filter" => "webp:alpha-filter=none",
             "output" => $outName
         ]);
 
         $this->filenames[] = $outName;
-        $this->lastInputFile = $outName;
 
-        return $outName;
+        return  $outName;
 
     }
 

@@ -3,7 +3,7 @@
 /.phpunit.result.cache
 report
 composer.lock
-
+/.test
 
 /node_modules
 /workspaces
