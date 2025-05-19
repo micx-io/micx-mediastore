@@ -45,8 +45,8 @@ class ImageShellTransformer
         $outName = $inputDir . "/" .  $inputName . "-" . $width . "."  . $format;
         $outName100q = $inputDir . "/" .  $inputName . "-" . $width . "-100q."  . $format;
 
-        // To prevent qualtity losses in lower resolutions first resize to 100% quality
-        phore_exec("gm convert ':input' -auto-orient -quality {quality} -resize '{width}x' ':output'", [
+        // To prevent qualtity losses in lower resolutions first resize to 100% quality (Exif Daten löschen)
+        phore_exec("gm convert ':input' -auto-orient -quality {quality} -resize '{width}x' +profile exif ':output'", [
             "input" => $this->lastInputFile,
             "width" => $width,
             "quality" => 100,
@@ -56,8 +56,8 @@ class ImageShellTransformer
         $this->filenames[] = $outName100q;
         $this->lastInputFile = $outName100q;
 
-        // Then reduce quality
-        phore_exec("gm convert -strip ':input' -define {method} -define {filter} -define {alpha-filter} -define {alpha-compression} -quality {quality} ':output'", [
+        // Then reduce quality / Do not use -strip, because this will remove COLOR Palette
+        phore_exec("gm convert ':input' -define {method} -define {filter} -define {alpha-filter} -define {alpha-compression} -quality {quality} ':output'", [
             "input" => $outName100q,
             "quality" => $quality,
             "method" => "webp:method=6",
