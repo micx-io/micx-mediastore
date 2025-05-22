@@ -33,6 +33,13 @@ class ImageShellTransformer
     }
 
 
+    public function getIccProfile() : string {
+        $ret = phore_exec("identify -format '%[profile:icc]' ':file' 2>/dev/null", ["file" => $this->inputFile]);
+        $ret = $ret[count($ret)-1]; // Ingore warnings tirggered by webp
+        return trim($ret);
+    }
+
+
     public $filenames = [];
 
     public function convert(string $format, int $width, int $quality) : string {
@@ -46,11 +53,13 @@ class ImageShellTransformer
         $outName100q = $inputDir . "/" .  $inputName . "-" . $width . "-100q."  . $format;
 
         // To prevent qualtity losses in lower resolutions first resize to 100% quality (Exif Daten löschen)
-        phore_exec("gm convert ':input' -auto-orient -quality {quality} -resize '{width}x' +profile exif ':output'", [
+        // Always convert to sRGB Display Profile
+        phore_exec("gm convert ':input' -auto-orient -quality {quality} -resize '{width}x' +profile exif -profile :profile ':output'", [
             "input" => $this->lastInputFile,
             "width" => $width,
             "quality" => 100,
-            "output" => $outName100q
+            "output" => $outName100q,
+            "profile" => __DIR__ . "/sRGB_v4_ICC_preference_displayclass.icc"
         ]);
 
         $this->filenames[] = $outName100q;
